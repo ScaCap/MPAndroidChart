@@ -16,7 +16,8 @@ import com.github.mikephil.charting.utils.Utils;
  *
  * @author Philipp Jahoda
  */
-public class YAxis extends AxisBase {
+public class YAxis
+        extends AxisBase {
 
     /**
      * indicates if the bottom y-label entry is drawn or not
@@ -47,6 +48,12 @@ public class YAxis extends AxisBase {
      * flag indicating that auto scale max restriction should be used
      */
     private boolean mUseAutoScaleRestrictionMax = false;
+
+    /**
+     * This is used to skip additional offset when using YAxisLabelPosition.OUTSIDE_CHART
+     * So we can draw grid lines under the actual labels
+     */
+    private boolean mSkipAdditionalOffset = false;
 
     /**
      * Color of the zero line
@@ -172,6 +179,22 @@ public class YAxis extends AxisBase {
      */
     public void setPosition(YAxisLabelPosition pos) {
         mPosition = pos;
+    }
+
+    /**
+     * set the skipAdditionalOffset
+     *
+     * @param mSkipAdditionalOffset
+     */
+    public void setSkipAdditionalOffset(boolean mSkipAdditionalOffset) {
+        this.mSkipAdditionalOffset = mSkipAdditionalOffset;
+    }
+
+    /**
+     * get the skipAdditionalOffset
+     */
+    public boolean getSkipAdditionalOffset() {
+        return mSkipAdditionalOffset;
     }
 
     /**
@@ -360,18 +383,18 @@ public class YAxis extends AxisBase {
      * @return
      */
     public boolean needsOffset() {
-        if (isEnabled() && isDrawLabelsEnabled() && getLabelPosition() == YAxisLabelPosition
-                .OUTSIDE_CHART)
-            return true;
-        else
-            return false;
+
+        if (mSkipAdditionalOffset) return false;
+
+        return isEnabled() && isDrawLabelsEnabled() && getLabelPosition() == YAxisLabelPosition
+                .OUTSIDE_CHART;
     }
 
     /**
      * Returns true if autoscale restriction for axis min value is enabled
      */
     @Deprecated
-    public boolean isUseAutoScaleMinRestriction( ) {
+    public boolean isUseAutoScaleMinRestriction() {
         return mUseAutoScaleRestrictionMin;
     }
 
@@ -379,7 +402,7 @@ public class YAxis extends AxisBase {
      * Sets autoscale restriction for axis min value as enabled/disabled
      */
     @Deprecated
-    public void setUseAutoScaleMinRestriction( boolean isEnabled ) {
+    public void setUseAutoScaleMinRestriction(boolean isEnabled) {
         mUseAutoScaleRestrictionMin = isEnabled;
     }
 
@@ -395,7 +418,7 @@ public class YAxis extends AxisBase {
      * Sets autoscale restriction for axis max value as enabled/disabled
      */
     @Deprecated
-    public void setUseAutoScaleMaxRestriction( boolean isEnabled ) {
+    public void setUseAutoScaleMaxRestriction(boolean isEnabled) {
         mUseAutoScaleRestrictionMax = isEnabled;
     }
 
